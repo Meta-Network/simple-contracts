@@ -1412,7 +1412,7 @@ contract ERC1155 is Context, ERC165, IERC1155, IERC1155MetadataURI {
 // File: New_1155.sol
 
 
-// contracts/New_1155.sol
+// contracts/IPFSTxToken.sol
 
 pragma solidity ^0.8.0;
 
@@ -1420,8 +1420,18 @@ pragma solidity ^0.8.0;
 
 
 contract IPFSTxToken is ERC1155, AccessControl {
+
+    struct TimeStamp {
+        uint timestamp;
+        uint blockNumber;
+    }
+
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
+
+    mapping(string => TimeStamp) public cidTime;
+
+    event CidSaved(string cid);
 
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
 
@@ -1434,6 +1444,13 @@ contract IPFSTxToken is ERC1155, AccessControl {
         _setURI(ipfsCid);
         _tokenIds.increment();
         _mint(msg.sender, _tokenIds.current(), 1, "");
+
+        cidTime[ipfsCid] = TimeStamp({
+            timestamp: block.timestamp,
+            blockNumber: block.number
+        });
+        
+        emit CidSaved(ipfsCid);
     }
 
     function supportsInterface(bytes4 interfaceId)
