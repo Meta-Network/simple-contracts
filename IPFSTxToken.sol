@@ -1429,7 +1429,7 @@ contract IPFSTxToken is ERC1155, AccessControl {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    mapping(string => TimeStamp) public cidTime;
+    mapping(string => TimeStamp) public mintTime;
 
     event CidSaved(string cid);
 
@@ -1445,7 +1445,7 @@ contract IPFSTxToken is ERC1155, AccessControl {
         _tokenIds.increment();
         _mint(msg.sender, _tokenIds.current(), 1, "");
 
-        cidTime[ipfsCid] = TimeStamp({
+        mintTime[ipfsCid] = TimeStamp({
             timestamp: block.timestamp,
             blockNumber: block.number
         });
